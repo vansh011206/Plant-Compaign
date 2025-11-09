@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Contact Us - PlantCare</title>
+
+    <!-- Font Awesome -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+
+    <!-- Google Fonts -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      :root {
+        --green-primary: #43a047;
+        --green-dark: #2d5f2e;
+        --green-light: #66bb6a;
+        --bg-gradient: linear-gradient(135deg, #dff7e1, #b9e4c9);
+        --glass-bg: rgba(255, 255, 255, 0.25);
+        --glass-border: rgba(255, 255, 255, 0.3);
+        --shadow-sm: 0 4px 20px rgba(0, 0, 0, 0.1);
+        --shadow-md: 0 8px 32px rgba(0, 0, 0, 0.15);
+        --text-primary: #2d5f2e;
+        --text-secondary: #5a785a;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Poppins", sans-serif;
+        background: var(--bg-gradient);
+        min-height: 100vh;
+        color: var(--text-primary);
+        position: relative;
+        overflow-x: hidden;
+      }
+      /* For Chrome, Edge, and Safari */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+  background: transparent; /* transparent scrollbar background */
+}
+
+::-webkit-scrollbar-track {
+  background: transparent; /* transparent track */
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #064e3b; /* dark green thumb */
+  border-radius: 10px;       /* rounded corners */
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: #076b4f; /* slightly lighter on hover */
+}
+
+
+      /* Floating Particles */
+      .particles {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        z-index: 0;
+      }
+      .particle {
+        position: absolute;
+        opacity: 0.15;
+        animation: float 18s infinite ease-in-out;
+      }
+      .particle:nth-child(1) {
+        left: 15%;
+        top: 25%;
+        animation-delay: 0s;
+      }
+      .particle:nth-child(2) {
+        left: 75%;
+        top: 45%;
+        animation-delay: 4s;
+      }
+      .particle:nth-child(3) {
+        left: 35%;
+        top: 70%;
+        animation-delay: 7s;
+      }
+      .particle:nth-child(4) {
+        left: 60%;
+        top: 15%;
+        animation-delay: 2s;
+      }
+      @keyframes float {
+        0%,
+        100% {
+          transform: translate(0, 0) rotate(0deg);
+        }
+        25% {
+          transform: translate(25px, -25px) rotate(90deg);
+        }
+        50% {
+          transform: translate(-15px, 15px) rotate(180deg);
+        }
+        75% {
+          transform: translate(15px, 25px) rotate(270deg);
+        }
+      }
+
+      /* Navbar */
+      nav {
+        background: var(--glass-bg);
+        backdrop-filter: blur(10px);
+        padding: 1rem 2rem;
+        box-shadow: var(--shadow-sm);
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+      }
+      .nav-container {
+        max-width: 1400px;
+        margin: 0 auto;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .logo {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--green-primary);
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        text-decoration: none;
+      }
+      .nav-links {
+        display: flex;
+        list-style: none;
+        gap: 2rem;
+      }
+      .nav-links a {
+        color: var(--text-primary);
+        text-decoration: none;
+        font-weight: 500;
+        padding: 0.5rem 1rem;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+        transition: all 0.3s;
+      }
+      .nav-links a:hover {
+        background: rgba(67, 160, 71, 0.1);
+        color: var(--green-primary);
+      }
+      .nav-links a.active {
+        background: rgba(67, 160, 71, 0.15);
+        color: var(--green-primary);
+        font-weight: 600;
+      }
+
+      /* Main Container */
+      .container {
+        max-width: 1400px;
+        margin: 2rem auto;
+        padding: 0 2rem;
+        position: relative;
+        z-index: 10;
+      }
+
+      .glass-card {
+        background: var(--glass-bg);
+        backdrop-filter: blur(10px);
+        border-radius: 20px;
+        padding: 2.5rem;
+        box-shadow: var(--shadow-md);
+        border: 1px solid var(--glass-border);
+        transition: all 0.3s;
+      }
+      .glass-card:hover {
+        transform: translateY(-5px);
+        box-shadow: var(--shadow-md);
+      }
+
+      .page-header {
+        text-align: center;
+        margin-bottom: 2.5rem;
+      }
+      .page-title {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: var(--text-primary);
+        margin-bottom: 0.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.6rem;
+      }
+      .page-subtitle {
+        font-size: 1.1rem;
+        color: var(--text-secondary);
+        max-width: 700px;
+        margin: 0 auto;
+      }
+
+      /* Contact Form */
+      .contact-form {
+        display: grid;
+        gap: 1.5rem;
+        max-width: 800px;
+        margin: 0 auto;
+      }
+      .form-group {
+        display: flex;
+        flex-direction: column;
+      }
+      .form-label {
+        font-weight: 600;
+        color: var(--text-primary);
+        margin-bottom: 0.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+      }
+      .form-input,
+      .form-textarea {
+        width: 100%;
+        padding: 0.9rem;
+        border: 2px solid rgba(67, 160, 71, 0.3);
+        border-radius: 10px;
+        font-family: "Poppins", sans-serif;
+        font-size: 1rem;
+        background: rgba(255, 255, 255, 0.5);
+        transition: all 0.3s;
+      }
+      .form-input:focus,
+      .form-textarea:focus {
+        outline: none;
+        border-color: var(--green-primary);
+        background: #fff;
+        box-shadow: 0 0 0 3px rgba(67, 160, 71, 0.15);
+      }
+      .form-textarea {
+        min-height: 140px;
+        resize: vertical;
+      }
+
+      .submit-btn {
+        background: var(--green-primary);
+        color: white;
+        border: none;
+        padding: 1rem 2rem;
+        border-radius: 10px;
+        font-weight: 600;
+        font-size: 1.1rem;
+        cursor: pointer;
+        transition: all 0.3s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        margin-top: 1rem;
+      }
+      .submit-btn:hover {
+        background: var(--green-light);
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(67, 160, 71, 0.4);
+      }
+      .submit-btn.loading {
+        opacity: 0.7;
+        pointer-events: none;
+      }
+      .submit-btn.loading::after {
+        content: "";
+        width: 20px;
+        height: 20px;
+        border: 3px solid rgba(255, 255, 255, 0.3);
+        border-top-color: white;
+        border-radius: 50%;
+        animation: spin 0.8s linear infinite;
+        margin-left: 0.5rem;
+      }
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+
+      /* Contact Info */
+      .contact-info {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1.5rem;
+        margin-top: 3rem;
+      }
+      .info-card {
+        background: rgba(255, 255, 255, 0.3);
+        backdrop-filter: blur(8px);
+        border-radius: 15px;
+        padding: 1.5rem;
+        text-align: center;
+        transition: all 0.3s;
+        border: 1px solid var(--glass-border);
+      }
+      .info-card:hover {
+        background: rgba(255, 255, 255, 0.5);
+        transform: translateY(-5px);
+      }
+      .info-icon {
+        font-size: 2.2rem;
+        color: var(--green-primary);
+        margin-bottom: 0.8rem;
+      }
+      .info-title {
+        font-weight: 600;
+        color: var(--text-primary);
+        margin-bottom: 0.4rem;
+      }
+      .info-text {
+        color: var(--text-secondary);
+        font-size: 0.95rem;
+      }
+
+      /* Toast Alert */
+      .alert {
+        position: fixed;
+        top: 100px;
+        right: 2rem;
+        padding: 1rem 1.5rem;
+        border-radius: 10px;
+        background: rgba(67, 160, 71, 0.95);
+        color: #fff;
+        font-weight: 600;
+        box-shadow: var(--shadow-md);
+        z-index: 3000;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        transform: translateX(400px);
+        transition: transform 0.4s ease;
+      }
+      .alert.show {
+        transform: translateX(0);
+      }
+
+      /* Responsive */
+      @media (max-width: 768px) {
+        .page-title {
+          font-size: 2rem;
+        }
+        .nav-links {
+          gap: 1rem;
+        }
+        .nav-links a {
+          padding: 0.4rem 0.8rem;
+          font-size: 0.9rem;
+        }
+        .container {
+          padding: 0 1rem;
+        }
+        .glass-card {
+          padding: 2rem 1.5rem;
+        }
+      }
+      @media (max-width: 480px) {
+        .logo {
+          font-size: 1.2rem;
+        }
+        .nav-links {
+          gap: 0.5rem;
+        }
+        .nav-links a {
+          font-size: 0.8rem;
+          padding: 0.3rem 0.6rem;
+        }
+        .page-title {
+          font-size: 1.8rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Floating Particles -->
+    <div class="particles">
+      <svg
+        class="particle"
+        width="60"
+        height="60"
+        viewBox="0 0 60 60"
+        fill="none"
+      >
+        <path
+          d="M30 0C35 10 40 15 50 15C40 20 35 25 35 35C30 25 25 20 15 20C25 15 30 10 30 0Z"
+          fill="#43a047"
+        />
+      </svg>
+      <svg
+        class="particle"
+        width="80"
+        height="80"
+        viewBox="0 0 60 60"
+        fill="none"
+      >
+        <path
+          d="M30 0C35 10 40 15 50 15C40 20 35 25 35 35C30 25 25 20 15 20C25 15 30 10 30 0Z"
+          fill="#2d5f2e"
+        />
+      </svg>
+      <svg
+        class="particle"
+        width="50"
+        height="50"
+        viewBox="0 0 60 60"
+        fill="none"
+      >
+        <path
+          d="M30 0C35 10 40 15 50 15C40 20 35 25 35 35C30 25 25 20 15 20C25 15 30 10 30 0Z"
+          fill="#66bb6a"
+        />
+      </svg>
+      <svg
+        class="particle"
+        width="70"
+        height="70"
+        viewBox="0 0 60 60"
+        fill="none"
+      >
+        <path
+          d="M30 0C35 10 40 15 50 15C40 20 35 25 35 35C30 25 25 20 15 20C25 15 30 10 30 0Z"
+          fill="#43a047"
+        />
+      </svg>
+    </div>
+
+    <!-- Navbar -->
+    <nav>
+      <div class="nav-container">
+        <a href="/" class="logo"><i class="fas fa-seedling"></i> PlantCare</a>
+        <ul class="nav-links">
+          <li>
+            <a href="/dashboard"
+              ><i class="fas fa-tachometer-alt"></i> Dashboard</a
+            >
+          </li>
+          <li>
+            <a href="/examine"><i class="fas fa-camera"></i> Upload</a>
+          </li>
+          <li>
+            <a href="/calendar"><i class="fas fa-calendar-alt"></i> Calendar</a>
+          </li>
+          <li>
+            <a href="/profile"><i class="fas fa-user"></i> Profile</a>
+          </li>
+          <li>
+            <a href="/contact" class="active"
+              ><i class="fas fa-envelope"></i> Contact</a
+            >
+          </li>
+        </ul>
+      </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container">
+      <div class="glass-card">
+        <div class="page-header">
+          <h1 class="page-title">
+            <i class="fas fa-headset"></i> Get in Touch
+          </h1>
+          <p class="page-subtitle">
+            Have a question, feedback, or need help? We're here to assist you
+            with your plant care journey.
+          </p>
+        </div>
+
+        <form class="contact-form" id="contactForm">
+          <div class="form-group">
+            <label class="form-label"
+              ><i class="fas fa-user"></i> Full Name</label
+            >
+            <input
+              type="text"
+              class="form-input"
+              id="name"
+              required
+              placeholder="John Doe"
+            />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label"
+              ><i class="fas fa-envelope"></i> Email Address</label
+            >
+            <input
+              type="email"
+              class="form-input"
+              id="email"
+              required
+              placeholder="john@example.com"
+            />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label"><i class="fas fa-tag"></i> Subject</label>
+            <input
+              type="text"
+              class="form-input"
+              id="subject"
+              required
+              placeholder="Plant Identification Issue"
+            />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label"
+              ><i class="fas fa-comment-dots"></i> Message</label
+            >
+            <textarea
+              class="form-textarea"
+              id="message"
+              required
+              placeholder="Tell us how we can help..."
+            ></textarea>
+          </div>
+
+          <button type="submit" class="submit-btn" id="submitBtn">
+            <i class="fas fa-paper-plane"></i> Send Message
+          </button>
+        </form>
+
+        <!-- Contact Info -->
+        <div class="contact-info">
+          <div class="info-card">
+            <div class="info-icon"><i class="fas fa-envelope"></i></div>
+            <div class="info-title">Email Us</div>
+            <div class="info-text">support@plantcare.app</div>
+          </div>
+          <div class="info-card">
+            <div class="info-icon"><i class="fas fa-phone"></i></div>
+            <div class="info-title">Call Us</div>
+            <div class="info-text">+1 (555) 123-4567</div>
+          </div>
+          <div class="info-card">
+            <div class="info-icon"><i class="fas fa-map-marker-alt"></i></div>
+            <div class="info-title">Location</div>
+            <div class="info-text">Greenville, CA 90210</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Toast Alert -->
+    <div class="alert" id="alert">
+      <i class="fas fa-check-circle"></i> <span id="alertMessage"></span>
+    </div>
+
+    <script>
+      const form = document.getElementById("contactForm");
+      const submitBtn = document.getElementById("submitBtn");
+      const alert = document.getElementById("alert");
+      const alertMessage = document.getElementById("alertMessage");
+
+      form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+
+        // Show loading
+        submitBtn.classList.add("loading");
+        submitBtn.innerHTML =
+          '<i class="fas fa-spinner fa-spin"></i> Sending...';
+
+        // Simulate API call
+        await new Promise((r) => setTimeout(r, 1500));
+
+        // Success
+        showAlert("Thank you! Your message has been sent. We'll reply soon.");
+
+        // Reset form
+        form.reset();
+        submitBtn.classList.remove("loading");
+        submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Send Message';
+      });
+
+      function showAlert(msg) {
+        alertMessage.textContent = msg;
+        alert.classList.add("show");
+        setTimeout(() => alert.classList.remove("show"), 4000);
+      }
+
+      // Optional: Dark mode toggle (same as other pages)
+      // You can remove if not needed
+      const themeToggle = document.createElement("button");
+      themeToggle.innerHTML = "Sun";
+      themeToggle.style.cssText = `
+      position: fixed; bottom: 2rem; right: 2rem; width: 50px; height: 50px;
+      border-radius: 50%; background: var(--green-primary); color: white;
+      border: none; font-size: 1.4rem; cursor: pointer; z-index: 1000;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2); transition: all 0.3s;
+    `;
+      themeToggle.onclick = () => {
+        document.body.classList.toggle("dark-mode");
+        themeToggle.innerHTML = document.body.classList.contains("dark-mode")
+          ? "Moon"
+          : "Sun";
+      };
+      document.body.appendChild(themeToggle);
+    </script>
+
+    <!-- Dark Mode Styles (optional) -->
+    <style>
+      body.dark-mode {
+        background: linear-gradient(135deg, #0a2e1f, #1a1a1a);
+        color: #e8f5e9;
+      }
+      body.dark-mode .glass-card,
+      body.dark-mode .info-card {
+        background: rgba(26, 26, 26, 0.7);
+        border-color: rgba(255, 255, 255, 0.1);
+      }
+      body.dark-mode .form-input,
+      body.dark-mode .form-textarea {
+        background: rgba(255, 255, 255, 0.1);
+        border-color: rgba(102, 187, 106, 0.4);
+        color: #e8f5e9;
+      }
+      body.dark-mode .form-input:focus,
+      body.dark-mode .form-textarea:focus {
+        background: rgba(255, 255, 255, 0.2);
+        border-color: #66bb6a;
+      }
+      body.dark-mode .nav-links a,
+      body.dark-mode .page-title,
+      body.dark-mode .info-title,
+      body.dark-mode .form-label {
+        color: #e8f5e9;
+      }
+      body.dark-mode .page-subtitle,
+      body.dark-mode .info-text {
+        color: #b9e4c9;
+      }
+    </style>
+  </body>
+</html>

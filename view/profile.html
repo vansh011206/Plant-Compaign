@@ -1,0 +1,1129 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Profile - PlantCare Dashboard</title>
+
+    <!-- Font Awesome -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+
+    <!-- Google Fonts -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      /* Apply to the element that should scroll */
+/* For Chrome, Edge, and Safari */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+  background: transparent; /* transparent scrollbar background */
+}
+
+::-webkit-scrollbar-track {
+  background: transparent; /* transparent track */
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #064e3b; /* dark green thumb */
+  border-radius: 10px;       /* rounded corners */
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: #076b4f; /* slightly lighter on hover */
+}
+
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: "Poppins", sans-serif;
+        background: linear-gradient(135deg, #dff7e1, #b9e4c9);
+        min-height: 100vh;
+        padding-bottom: 40px;
+        color: #2d5f2e;
+      }
+      nav {
+        background: rgba(255, 255, 255, 0.25);
+        backdrop-filter: blur(10px);
+        padding: 1rem 2rem;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+      }
+      .nav-container {
+        max-width: 1400px;
+        margin: 0 auto;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .logo {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #43a047;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+      .nav-links {
+        display: flex;
+        list-style: none;
+        gap: 2rem;
+      }
+      .nav-links a {
+        color: #2d5f2e;
+        text-decoration: none;
+        font-weight: 500;
+        transition: all 0.3s;
+        padding: 0.5rem 1rem;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+      }
+      .nav-links a:hover {
+        color: #43a047;
+        background: rgba(67, 160, 71, 0.1);
+      }
+      .nav-links a.active {
+        color: #43a047;
+        background: rgba(67, 160, 71, 0.15);
+        font-weight: 600;
+      }
+      .container {
+        max-width: 1400px;
+        margin: 2rem auto;
+        padding: 0 2rem;
+      }
+      .glass-card {
+        background: rgba(255, 255, 255, 0.25);
+        backdrop-filter: blur(10px);
+        border-radius: 20px;
+        padding: 2rem;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        transition: all 0.3s;
+      }
+      .glass-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+      }
+      .profile-header {
+        background: linear-gradient(
+          135deg,
+          rgba(67, 160, 71, 0.3),
+          rgba(102, 187, 106, 0.3)
+        );
+        backdrop-filter: blur(10px);
+        border-radius: 20px;
+        margin-bottom: 2rem;
+        overflow: hidden;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+      }
+      .profile-banner {
+        height: 200px;
+        background: linear-gradient(135deg, #43a047, #66bb6a);
+        position: relative;
+      }
+      .profile-info {
+        padding: 2rem;
+        margin-top: -80px;
+        display: flex;
+        align-items: flex-end;
+        gap: 2rem;
+        position: relative;
+      }
+      .profile-picture-wrapper {
+        position: relative;
+      }
+      .profile-picture {
+        width: 150px;
+        height: 150px;
+        border-radius: 50%;
+        border: 5px solid #fff;
+        object-fit: cover;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+        cursor: pointer;
+        transition: all 0.3s;
+      }
+      .profile-picture:hover {
+        transform: scale(1.05);
+      }
+      .camera-icon {
+        position: absolute;
+        bottom: 10px;
+        right: 10px;
+        background: #43a047;
+        color: #fff;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        transition: all 0.3s;
+      }
+      .camera-icon:hover {
+        background: #66bb6a;
+        transform: scale(1.1);
+      }
+      .profile-details {
+        flex: 1;
+        padding-bottom: 1rem;
+      }
+      .profile-name {
+        font-size: 2rem;
+        font-weight: 700;
+        color: #2d5f2e;
+        margin-bottom: 0.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+      .profile-tagline {
+        font-size: 1.1rem;
+        color: #5a785a;
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+      }
+      .edit-profile-btn {
+        background: #43a047;
+        color: #fff;
+        border: none;
+        padding: 0.8rem 2rem;
+        border-radius: 10px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s;
+        box-shadow: 0 4px 15px rgba(67, 160, 71, 0.3);
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+      .edit-profile-btn:hover {
+        background: #66bb6a;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(67, 160, 71, 0.4);
+      }
+      .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+      }
+      .stat-card {
+        background: rgba(255, 255, 255, 0.25);
+        backdrop-filter: blur(10px);
+        border-radius: 15px;
+        padding: 1.5rem;
+        text-align: center;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        transition: all 0.3s;
+      }
+      .stat-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+      }
+      .stat-icon {
+        font-size: 2.5rem;
+        margin-bottom: 0.5rem;
+        color: #43a047;
+      }
+      .stat-value {
+        font-size: 2rem;
+        font-weight: 700;
+        color: #43a047;
+        margin-bottom: 0.3rem;
+      }
+      .stat-label {
+        font-size: 0.9rem;
+        color: #5a785a;
+        font-weight: 500;
+      }
+      .content-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 2rem;
+        margin-bottom: 2rem;
+      }
+      .detail-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1rem;
+        background: rgba(255, 255, 255, 0.3);
+        border-radius: 10px;
+        margin-bottom: 1rem;
+        transition: all 0.3s;
+      }
+      .detail-item:hover {
+        background: rgba(255, 255, 255, 0.5);
+      }
+      .detail-label {
+        font-weight: 600;
+        color: #2d5f2e;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+      .detail-value {
+        color: #5a785a;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+      .edit-icon {
+        cursor: pointer;
+        opacity: 0.6;
+        transition: all 0.3s;
+        font-size: 1.1rem;
+      }
+      .edit-icon:hover {
+        opacity: 1;
+        transform: scale(1.2);
+        color: #43a047;
+      }
+      .preference-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1rem;
+        background: rgba(255, 255, 255, 0.3);
+        border-radius: 10px;
+        margin-bottom: 1rem;
+      }
+      .preference-label {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-weight: 500;
+        color: #2d5f2e;
+      }
+      .toggle-switch {
+        position: relative;
+        width: 60px;
+        height: 30px;
+        background: rgba(0, 0, 0, 0.2);
+        border-radius: 30px;
+        cursor: pointer;
+        transition: all 0.3s;
+      }
+      .toggle-switch.active {
+        background: #43a047;
+      }
+      .toggle-slider {
+        position: absolute;
+        top: 3px;
+        left: 3px;
+        width: 24px;
+        height: 24px;
+        background: #fff;
+        border-radius: 50%;
+        transition: all 0.3s;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+      }
+      .toggle-switch.active .toggle-slider {
+        transform: translateX(30px);
+      }
+      .section-header {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: #2d5f2e;
+        margin-bottom: 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+      .modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        backdrop-filter: blur(5px);
+        z-index: 2000;
+        align-items: center;
+        justify-content: center;
+      }
+      .modal.active {
+        display: flex;
+      }
+      .modal-content {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(20px);
+        border-radius: 20px;
+        padding: 2rem;
+        max-width: 600px;
+        width: 90%;
+        max-height: 90vh;
+        overflow-y: auto;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      }
+      .modal-header {
+        font-size: 1.8rem;
+        font-weight: 700;
+        color: #2d5f2e;
+        margin-bottom: 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+      .form-group {
+        margin-bottom: 1.5rem;
+      }
+      .form-label {
+        display: block;
+        font-weight: 600;
+        color: #2d5f2e;
+        margin-bottom: 0.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+      }
+      .form-input,
+      .form-select {
+        width: 100%;
+        padding: 0.8rem;
+        border: 2px solid rgba(67, 160, 71, 0.3);
+        border-radius: 10px;
+        font-family: "Poppins", sans-serif;
+        font-size: 1rem;
+        transition: all 0.3s;
+        background: rgba(255, 255, 255, 0.5);
+      }
+      .form-input:focus,
+      .form-select:focus {
+        outline: none;
+        border-color: #43a047;
+        background: #fff;
+      }
+      .image-preview {
+        width: 150px;
+        height: 150px;
+        border-radius: 50%;
+        object-fit: cover;
+        margin: 1rem auto;
+        display: block;
+        border: 3px solid #43a047;
+      }
+      .modal-buttons {
+        display: flex;
+        gap: 1rem;
+        margin-top: 2rem;
+      }
+      .btn {
+        flex: 1;
+        padding: 0.8rem;
+        border: none;
+        border-radius: 10px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s;
+        font-size: 1rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+      }
+      .btn-primary {
+        background: #43a047;
+        color: #fff;
+        box-shadow: 0 4px 15px rgba(67, 160, 71, 0.3);
+      }
+      .btn-primary:hover {
+        background: #66bb6a;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(67, 160, 71, 0.4);
+      }
+      .btn-secondary {
+        background: rgba(0, 0, 0, 0.1);
+        color: #2d5f2e;
+      }
+      .btn-secondary:hover {
+        background: rgba(0, 0, 0, 0.2);
+      }
+      .alert {
+        position: fixed;
+        top: 100px;
+        right: 2rem;
+        padding: 1rem 1.5rem;
+        border-radius: 10px;
+        background: rgba(67, 160, 71, 0.95);
+        color: #fff;
+        font-weight: 600;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+        z-index: 3000;
+        display: none;
+        align-items: center;
+        gap: 0.5rem;
+      }
+      .alert.show {
+        display: flex;
+        animation: slideInRight 0.3s ease;
+      }
+      @keyframes slideInRight {
+        from {
+          transform: translateX(400px);
+        }
+        to {
+          transform: translateX(0);
+        }
+      }
+      .badge-container {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        padding: 1.5rem;
+        background: linear-gradient(
+          135deg,
+          rgba(67, 160, 71, 0.2),
+          rgba(102, 187, 106, 0.2)
+        );
+        border-radius: 15px;
+        margin-bottom: 2rem;
+      }
+      .badge-icon {
+        font-size: 3rem;
+        color: #43a047;
+      }
+      .badge-info {
+        flex: 1;
+      }
+      .badge-level {
+        font-size: 1.3rem;
+        font-weight: 700;
+        color: #43a047;
+        margin-bottom: 0.3rem;
+      }
+      .badge-progress {
+        font-size: 0.9rem;
+        color: #5a785a;
+      }
+      .progress-bar-container {
+        width: 100%;
+        height: 10px;
+        background: rgba(0, 0, 0, 0.1);
+        border-radius: 10px;
+        overflow: hidden;
+        margin-top: 0.5rem;
+      }
+      .progress-bar {
+        height: 100%;
+        background: linear-gradient(90deg, #43a047, #66bb6a);
+        border-radius: 10px;
+        transition: width 0.5s ease;
+      }
+      .tags-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        margin-top: 0.5rem;
+      }
+      .tag {
+        background: rgba(67, 160, 71, 0.2);
+        color: #2d5f2e;
+        padding: 0.4rem 1rem;
+        border-radius: 20px;
+        font-size: 0.9rem;
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        gap: 0.3rem;
+      }
+      .activity-timeline {
+        position: relative;
+        padding-left: 2rem;
+      }
+      .activity-item {
+        position: relative;
+        padding: 1rem;
+        margin-bottom: 1rem;
+        background: rgba(255, 255, 255, 0.3);
+        border-radius: 10px;
+        transition: all 0.3s;
+      }
+      .activity-item:hover {
+        background: rgba(255, 255, 255, 0.5);
+        transform: translateX(5px);
+      }
+      .activity-item::before {
+        content: "";
+        position: absolute;
+        left: -2rem;
+        top: 1.5rem;
+        width: 12px;
+        height: 12px;
+        background: #43a047;
+        border-radius: 50%;
+        border: 3px solid #fff;
+      }
+      .activity-item::after {
+        content: "";
+        position: absolute;
+        left: -1.55rem;
+        top: 2.5rem;
+        width: 2px;
+        height: calc(100% + 1rem);
+        background: rgba(67, 160, 71, 0.3);
+      }
+      .activity-item:last-child::after {
+        display: none;
+      }
+      .activity-text {
+        color: #2d5f2e;
+        font-weight: 500;
+        margin-bottom: 0.3rem;
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+      }
+      .activity-time {
+        font-size: 0.85rem;
+        color: #5a785a;
+      }
+      .loading {
+        text-align: center;
+        padding: 2rem;
+        color: #666;
+      }
+      @media (max-width: 1024px) {
+        .content-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+      @media (max-width: 768px) {
+        .nav-links {
+          gap: 1rem;
+        }
+        .nav-links a {
+          padding: 0.4rem 0.8rem;
+          font-size: 0.9rem;
+        }
+        .stats-grid {
+          grid-template-columns: 1fr 1fr;
+        }
+        .profile-info {
+          flex-direction: column;
+          align-items: center;
+          text-align: center;
+        }
+        .profile-name {
+          font-size: 1.5rem;
+        }
+        .container {
+          padding: 0 1rem;
+        }
+      }
+      @media (max-width: 480px) {
+        .stats-grid {
+          grid-template-columns: 1fr;
+        }
+        .logo {
+          font-size: 1.2rem;
+        }
+        .nav-links {
+          gap: 0.5rem;
+        }
+        .nav-links a {
+          font-size: 0.8rem;
+          padding: 0.3rem 0.6rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Navbar -->
+    <nav>
+      <div class="nav-container">
+        <div class="logo"><i class="fas fa-seedling"></i> PlantCare</div>
+        <ul class="nav-links">
+          <li>
+            <a href="/dashboard"
+              ><i class="fas fa-tachometer-alt"></i> Dashboard</a
+            >
+          </li>
+          <li>
+            <a href="/examine"><i class="fas fa-camera"></i> Upload</a>
+          </li>
+          <li>
+            <a href="/calendar"><i class="fas fa-calendar-alt"></i> Calendar</a>
+          </li>
+          <li>
+            <a href="/profile" class="active"
+              ><i class="fas fa-user"></i> Profile</a
+            >
+          </li>
+          <li>
+            <a href="/contact"><i class="fas fa-envelope"></i> Contact</a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+
+    <div class="container" id="profileContainer">
+      <div class="loading">
+        <i class="fas fa-spinner fa-spin"></i> Loading profile...
+      </div>
+    </div>
+
+    <!-- Edit Modal -->
+    <div class="modal" id="editModal">
+      <div class="modal-content">
+        <h2 class="modal-header"><i class="fas fa-edit"></i> Edit Profile</h2>
+        <form id="editForm" enctype="multipart/form-data">
+          <div class="form-group">
+            <label class="form-label"
+              ><i class="fas fa-image"></i> Profile Photo</label
+            >
+            <img id="previewImg" class="image-preview" src="" alt="Preview" />
+            <input
+              type="file"
+              name="avatar"
+              id="photoInput"
+              accept="image/*"
+              class="form-input"
+            />
+          </div>
+          <div class="form-group">
+            <label class="form-label"><i class="fas fa-user"></i> Name</label>
+            <input
+              type="text"
+              name="name"
+              id="nameInput"
+              class="form-input"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label class="form-label"
+              ><i class="fas fa-envelope"></i> Email</label
+            >
+            <input
+              type="email"
+              name="email"
+              id="emailInput"
+              class="form-input"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label class="form-label"
+              ><i class="fas fa-map-marker-alt"></i> Location</label
+            >
+            <input
+              type="text"
+              name="location"
+              id="locationInput"
+              class="form-input"
+            />
+          </div>
+          <div class="modal-buttons">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              onclick="closeEditModal()"
+            >
+              <i class="fas fa-times"></i> Cancel
+            </button>
+            <button type="submit" class="btn btn-primary">
+              <i class="fas fa-save"></i> Save Changes
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <div class="alert" id="alert">
+      <i class="fas fa-check-circle"></i> <span></span>
+    </div>
+
+    <script>
+      const API = "/api/profile";
+      let userData = {};
+fetch('/api/profile', { credentials: 'include' })
+        .then(r => r.ok ? r.json() : Promise.reject("Not logged in"))
+        .then(user => {
+            document.getElementById('profileName').textContent = user.name;
+            document.getElementById('profileEmail').textContent = user.email;
+            document.getElementById('profilePhoto').src = user.photo;
+        })
+        .catch(() => {
+            alert("Session expired! Login again.");
+            window.location.href = "/login";
+        });
+      document.addEventListener("DOMContentLoaded", loadProfile);
+
+      async function loadProfile() {
+        try {
+          const res = await fetch(API, { credentials: "include" });
+          if (!res.ok) throw new Error("Unauthorized");
+          userData = await res.json();
+          renderProfile(userData);
+          animateCounters();
+        } catch (err) {
+          document.getElementById("profileContainer").innerHTML = `
+            <div class="glass-card">
+              <i class="fas fa-sign-in-alt"></i> Please <a href="/login">log in</a> to view your profile.
+            </div>`;
+        }
+      }
+
+      function renderProfile(u) {
+        const container = document.getElementById("profileContainer");
+        container.innerHTML = `
+          <!-- Profile Header -->
+          <div class="profile-header">
+            <div class="profile-banner"></div>
+            <div class="profile-info">
+              <div class="profile-picture-wrapper">
+                <img src="${
+                  u.photo ||
+                  `https://ui-avatars.com/api/?name=${encodeURIComponent(
+                    u.name
+                  )}&background=43a047&color=fff`
+                }" 
+                     alt="Profile" class="profile-picture" id="profilePic">
+                <div class="camera-icon" onclick="document.getElementById('photoUpload').click()">
+                  <i class="fas fa-camera"></i>
+                </div>
+                <input type="file" id="photoUpload" accept="image/*" style="display:none" onchange="uploadAvatar(this.files[0])">
+              </div>
+              <div class="profile-details">
+                <h1 class="profile-name"><i class="fas fa-user-circle"></i> <span id="displayName">${
+                  u.name
+                }</span></h1>
+                <p class="profile-tagline"><i class="fas fa-leaf"></i> Plant Lover</p>
+                <button class="edit-profile-btn" onclick="openEditModal()">
+                  <i class="fas fa-edit"></i> Edit Profile
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Badge -->
+          <div class="glass-card">
+            <div class="badge-container">
+              <div class="badge-icon"><i class="fas fa-trophy"></i></div>
+              <div class="badge-info">
+                <div class="badge-level">Green Thumb - Level ${
+                  u.level || 1
+                }</div>
+                <div class="badge-progress">Profile: ${
+                  u.profileCompletion || 0
+                }%</div>
+                <div class="progress-bar-container"><div class="progress-bar" style="width:${
+                  u.profileCompletion || 0
+                }%"></div></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Stats -->
+          <div class="stats-grid">
+            <div class="stat-card">
+              <div class="stat-icon"><i class="fas fa-seedling"></i></div>
+              <div class="stat-value" data-target="${
+                u.totalPlants || 0
+              }">0</div>
+              <div class="stat-label">Plants</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon"><i class="fas fa-check-circle"></i></div>
+              <div class="stat-value" data-target="${
+                u.tasksCompleted || 0
+              }">0</div>
+              <div class="stat-label">Tasks Done</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon"><i class="fas fa-sun"></i></div>
+              <div class="stat-value" data-target="${
+                u.avgSunlight || 0
+              }">0</div>
+              <div class="stat-label">Sunlight (hrs)</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon"><i class="fas fa-heart"></i></div>
+              <div class="stat-value" data-target="${
+                u.healthScore || 0
+              }">0</div>
+              <div class="stat-label">Health Score</div>
+            </div>
+          </div>
+
+          <!-- Two Columns -->
+          <div class="content-grid">
+            <div class="glass-card">
+              <h2 class="section-header"><i class="fas fa-info-circle"></i> User Details</h2>
+              <div class="detail-item">
+                <span class="detail-label"><i class="fas fa-user"></i> Name</span>
+                <span class="detail-value"><span id="displayNameDetail">${
+                  u.name
+                }</span> <span class="edit-icon" onclick="openEditModal()"><i class="fas fa-edit"></i></span></span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-label"><i class="fas fa-envelope"></i> Email</span>
+                <span class="detail-value"><span id="displayEmail">${
+                  u.email
+                }</span> <span class="edit-icon" onclick="openEditModal()"><i class="fas fa-edit"></i></span></span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-label"><i class="fas fa-map-marker-alt"></i> Location</span>
+                <span class="detail-value"><span id="displayLocation">${
+                  u.location || "Not set"
+                }</span> <span class="edit-icon" onclick="openEditModal()"><i class="fas fa-edit"></i></span></span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-label"><i class="fas fa-calendar-plus"></i> Joined</span>
+                <span class="detail-value">${new Date(
+                  u.createdAt
+                ).toLocaleDateString()}</span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-label"><i class="fas fa-heart"></i> Favorites</span>
+                <span class="detail-value"><span class="edit-icon" onclick="openEditModal()"><i class="fas fa-edit"></i></span></span>
+              </div>
+              <div class="tags-container" id="favoritePlantsDisplay">
+                ${
+                  u.favoritePlants
+                    ?.map(
+                      (p) =>
+                        `<span class="tag"><i class="fas fa-leaf"></i> ${p}</span>`
+                    )
+                    .join("") || "<em>No favorites yet</em>"
+                }
+              </div>
+            </div>
+
+            <div class="glass-card">
+              <h2 class="section-header"><i class="fas fa-cog"></i> Preferences</h2>
+              <div class="preference-item">
+                <span class="preference-label"><i class="fas fa-moon"></i> Dark Mode</span>
+                <div class="toggle-switch ${
+                  u.darkMode ? "active" : ""
+                }" onclick="togglePref('darkMode', this)"></div>
+              </div>
+              <div class="preference-item">
+                <span class="preference-label"><i class="fas fa-bell"></i> Notifications</span>
+                <div class="toggle-switch ${
+                  u.notifications ? "active" : ""
+                }" onclick="togglePref('notifications', this)"></div>
+              </div>
+              <div class="preference-item">
+                <span class="preference-label"><i class="fas fa-chart-line"></i> Weekly Summary</span>
+                <div class="toggle-switch ${
+                  u.weeklySummary ? "active" : ""
+                }" onclick="togglePref('weeklySummary', this)"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Recent Activity -->
+          <div class="glass-card">
+            <h2 class="section-header"><i class="fas fa-history"></i> Recent Activity</h2>
+            <div class="activity-timeline" id="activityList">
+              ${
+                u.recentActivity?.length
+                  ? u.recentActivity
+                      .map(
+                        (a) => `
+                  <div class="activity-item">
+                    <div class="activity-text"><i class="fas fa-check"></i> ${
+                      a.text
+                    }</div>
+                    <div class="activity-time"><i class="fas fa-clock"></i> ${timeAgo(
+                      a.time
+                    )}</div>
+                  </div>
+                `
+                      )
+                      .join("")
+                  : "<em>No recent activity</em>"
+              }
+            </div>
+          </div>
+        `;
+      }
+/* ────── LISTEN FOR PLANT ADDED (profile.html) ────── */
+window.addEventListener('plantAdded', e => {
+  const newTotal = e.detail.total;
+  const plantStat = document.querySelector('.stat-value[data-target]'); // first stat = Plants
+  if (plantStat && plantStat.parentElement.querySelector('.stat-label').textContent === 'Plants') {
+    plantStat.dataset.target = newTotal;
+    plantStat.textContent = '0';
+    animateCounters();               // re-run all counters (fast)
+  }
+});
+
+/* ────── Keep your existing animateCounters() ────── */
+function animateCounters() {
+  document.querySelectorAll(".stat-value").forEach((el) => {
+    const target = +el.dataset.target;
+    let current = 0;
+    const step = target / 100;
+    const timer = setInterval(() => {
+      current += step;
+      if (current >= target) {
+        el.textContent = target;
+        clearInterval(timer);
+      } else {
+        el.textContent = Math.floor(current);
+      }
+    }, 20);
+  });
+}
+      function timeAgo(date) {
+        const seconds = Math.floor((new Date() - new Date(date)) / 1000);
+        if (seconds < 60) return "Just now";
+        const minutes = Math.floor(seconds / 60);
+        if (minutes < 60) return `${minutes} min ago`;
+        const hours = Math.floor(minutes / 60);
+        if (hours < 24) return `${hours} hr ago`;
+        return `${Math.floor(hours / 24)} days ago`;
+      }
+
+      function animateCounters() {
+        document.querySelectorAll(".stat-value").forEach((el) => {
+          const target = +el.dataset.target;
+          let current = 0;
+          const step = target / 100;
+          const timer = setInterval(() => {
+            current += step;
+            if (current >= target) {
+              el.textContent = target;
+              clearInterval(timer);
+            } else {
+              el.textContent = Math.floor(current);
+            }
+          }, 20);
+        });
+      }
+      
+
+      function openEditModal() {
+        document.getElementById("nameInput").value = userData.name;
+        document.getElementById("emailInput").value = userData.email;
+        document.getElementById("locationInput").value =
+          userData.location || "";
+        document.getElementById("previewImg").src =
+          userData.photo ||
+          `https://ui-avatars.com/api/?name=${encodeURIComponent(
+            userData.name
+          )}&background=43a047&color=fff`;
+        document.getElementById("editModal").classList.add("active");
+      }
+
+      function closeEditModal() {
+        document.getElementById("editModal").classList.remove("active");
+      }
+
+      document.getElementById("editForm").onsubmit = async function (e) {
+        e.preventDefault();
+        const formData = new FormData();
+        formData.append("name", document.getElementById("nameInput").value);
+        formData.append("email", document.getElementById("emailInput").value);
+        if (document.getElementById("locationInput").value)
+          formData.append(
+            "location",
+            document.getElementById("locationInput").value
+          );
+        if (document.getElementById("photoInput").files[0])
+          formData.append(
+            "avatar",
+            document.getElementById("photoInput").files[0]
+          );
+
+        try {
+          const res = await fetch(API, {
+            method: "POST",
+            body: formData,
+            credentials: "include",
+          });
+          const data = await res.json();
+          if (data.success) {
+            userData = data.user;
+            renderProfile(userData);
+            closeEditModal();
+            showAlert("Profile updated successfully!");
+          } else {
+            showAlert(data.error || "Update failed");
+          }
+        } catch (err) {
+          showAlert("Network error");
+        }
+      };
+
+      async function uploadAvatar(file) {
+        const formData = new FormData();
+        formData.append("avatar", file);
+        try {
+          const res = await fetch(API, {
+            method: "POST",
+            body: formData,
+            credentials: "include",
+          });
+          const data = await res.json();
+          if (data.success) {
+            userData = data.user;
+            document.getElementById("profilePic").src = userData.photo;
+            showAlert("Avatar updated!");
+          }
+        } catch (err) {
+          showAlert("Upload failed");
+        }
+      }
+
+      function togglePref(key, el) {
+        el.classList.toggle("active");
+        fetch(API, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ [key]: el.classList.contains("active") }),
+          credentials: "include",
+        });
+      }
+
+      function showAlert(msg) {
+        const alert = document.getElementById("alert");
+        alert.querySelector("span").textContent = msg;
+        alert.classList.add("show");
+        setTimeout(() => alert.classList.remove("show"), 3000);
+      }
+
+      document.getElementById("editModal").onclick = (e) => {
+        if (e.target === e.currentTarget) closeEditModal();
+      };
+      function broadcast(eventName, data) {
+  const payload = JSON.stringify({ event: eventName, data, ts: Date.now() });
+  localStorage.setItem('plantcare_event', payload);
+  // trigger the same event in the current tab
+  window.dispatchEvent(new Event('storage'));
+}
+window.addEventListener('storage', e => {
+  if (e.key !== 'plantcare_event') return;
+  try {
+    const { event, data } = JSON.parse(e.newValue);
+    window.dispatchEvent(new CustomEvent(event, { detail: data }));
+  } catch (_) {}
+});
+    </script>
+  </body>
+</html>

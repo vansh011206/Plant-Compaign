@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Plant Added!</title>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; background: #f4f7f6; padding: 20px; }
+        .container { max-width: 600px; margin: 0 auto; background: white; border-radius: 16px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
+        .header { background: linear-gradient(135deg, #1A5F3A, #2E7D4E); padding: 40px 30px; text-align: center; color: white; }
+        .header h1 { margin: 0; font-size: 28px; }
+        .body { padding: 40px 30px; color: #333; }
+        .plant-img { width: 100%; max-width: 400px; border-radius: 12px; margin: 20px 0; }
+        .highlight { background: #E8F5E9; padding: 20px; border-radius: 12px; border-left: 5px solid #1A5F3A; }
+        .footer { background: #1A5F3A; color: white; text-align: center; padding: 20px; font-size: 14px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Plant Added Successfully!</h1>
+        </div>
+        <div class="body">
+            <p>Hi <strong>${name}</strong>,</p>
+            <p>Congratulations! You've added a new plant to your garden:</p>
+
+            <div class="highlight">
+                <h2 style="color:#1A5F3A;margin-top:0;">${plantName}</h2>
+                <p><em>${scientificName}</em></p>
+                <p><strong>Confidence:</strong> ${confidence}%</p>
+            </div>
+
+            <img src="${imageUrl}" alt="${plantName}" class="plant-img">
+
+            <p>Keep nurturing it with love! We'll help you care for it.</p>
+            <p><strong>Date Added:</strong> ${date}</p>
+        </div>
+        <div class="footer">
+            © 2025 PlantCare Companion • Made with love for plant parents
+        </div>
+    </div>
+</body>
+</html>
