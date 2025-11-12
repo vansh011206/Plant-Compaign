@@ -35,9 +35,9 @@ app.use(session({
     resave: false,
     saveUninitialized: false,
     cookie: {
-        maxAge: 24 * 60 * 60 * 1000,
+        maxAge: 24 * 60 * 60 * 1000, // 24 hours
         httpOnly: true,
-        secure: false,
+        secure: process.env.NODE_ENV === 'production', // HTTPS only in prod
         sameSite: 'lax'
     }
 }));
@@ -56,7 +56,20 @@ const User = mongoose.model("User", new mongoose.Schema({
     email: { type: String, unique: true },
     password: String,
     photo: String,
-    verified: { type: Boolean, default: false }
+    verified: { type: Boolean, default: false },
+    level: { type: Number, default: 1 },
+    profileCompletion: { type: Number, default: 0 },
+    totalPlants: { type: Number, default: 0 },
+    tasksCompleted: { type: Number, default: 0 },
+    avgSunlight: { type: Number, default: 0 },
+    healthScore: { type: Number, default: 0 },
+    location: String,
+    favoritePlants: [String],
+    darkMode: { type: Boolean, default: false },
+    notifications: { type: Boolean, default: true },
+    weeklySummary: { type: Boolean, default: true },
+    recentActivity: [{ text: String, time: Date }],
+    createdAt: { type: Date, default: Date.now }
 }));
 
 // ===================== PASSPORT CONFIG =====================
@@ -112,9 +125,7 @@ function scheduleWateringReminders(email, plant) {
     const days = extractWateringDays(plant.care.water);
     if (!days) return;
 
-    const nextWater = Date.now() + days * 24 * 60 * 60 * 1000;
     const key = `${email}-${plant.scientificName}`;
-
     if (reminders.has(key)) clearTimeout(reminders.get(key).timeout);
 
     const timeout = setTimeout(async () => {
@@ -311,7 +322,7 @@ app.post("/api/signup", async (req, res) => {
 
     const user = new User({
         name, email, password: hashed,
-        photo: `https://ui-avatars.com/api/?name=${name}&background=66bb6a&color=fff`
+        photo: `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=66bb6a&color=fff`
     });
     await user.save();
 
@@ -368,10 +379,33 @@ app.post("/api/login", (req, res, next) => {
     })(req, res, next);
 });
 
-// ===================== PROFILE API =====================
-app.get("/api/profile", requireAuth, requireVerified, async (req, res) => {
-    const user = await User.findById(req.user.id).select("name email photo");
-    res.json({ name: user.name, email: user.email, photo: user.photo });
+// ===================== PROFILE API (FIXED) =====================
+app.get("/api/profile", requireAuth, async (req, res) => {
+    if (!req.user.verified) {
+        return res.status(403).json({ error: "Email not verified" });
+    }
+    const user = await User.findById(req.user.id);
+    res.json(user);
+});
+
+app.post("/api/profile", requireAuth, async (req, res) => {
+    const updates = {};
+    if (req.body.name) updates.name = req.body.name;
+    if (req.body.email) updates.email = req.body.email;
+    if (req.body.location !== undefined) updates.location = req.body.location;
+    if (req.body.darkMode !== undefined) updates.darkMode = req.body.darkMode;
+    if (req.body.notifications !== undefined) updates.notifications = req.body.notifications;
+    if (req.body.weeklySummary !== undefined) updates.weeklySummary = req.body.weeklySummary;
+
+    if (req.files?.avatar) {
+        const avatar = req.files.avatar;
+        const uploadPath = path.join(__dirname, "view", "uploads", `${Date.now()}_${avatar.name}`);
+        await avatar.mv(uploadPath);
+        updates.photo = `/uploads/${path.basename(uploadPath)}`;
+    }
+
+    const updatedUser = await User.findByIdAndUpdate(req.user.id, updates, { new: true });
+    res.json({ success: true, user: updatedUser });
 });
 
 // ===================== PROTECTED PAGES =====================
@@ -455,14 +489,6 @@ app.post("/api/add-to-garden", requireAuth, requireVerified, async (req, res) =>
             text: convert(getGardenAddEmail(plant, user.name))
         });
 
-        await transporter.sendMail({
-            from: `"PlantCare AI" <${process.env.EMAIL_USER}>`,
-            to: user.email,
-            subject: `Paani Daal Do! ${plant.commonName}`,
-            html: getWateringReminderEmail(plant, user.name),
-            text: convert(getWateringReminderEmail(plant, user.name))
-        });
-
         scheduleWateringReminders(user.email, plant);
 
         res.json({ success: true });
@@ -472,11 +498,11 @@ app.post("/api/add-to-garden", requireAuth, requireVerified, async (req, res) =>
     }
 });
 
-// ===================== LOGOUT =====================
-app.get("/api/logout", (req, res) => {
+// ===================== LOGOUT (POST ONLY) =====================
+app.post("/api/logout", (req, res) => {
     req.logout(() => {
         req.session.destroy(() => {
-            res.redirect("/login");
+            res.json({ success: true });
         });
     });
 });
@@ -493,8 +519,3 @@ app.listen(PORT, () => {
     console.log(`LIVE → http://localhost:${PORT}`);
     console.log(`LOGIN = WORKING`);
 });
-
-
-
-
-
