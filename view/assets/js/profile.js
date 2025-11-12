@@ -1,220 +1,191 @@
-      const API = "/api/profile";
-      let userData = {};
-fetch('/api/profile', { credentials: 'include' })
-        .then(r => r.ok ? r.json() : Promise.reject("Not logged in"))
-        .then(user => {
-            document.getElementById('profileName').textContent = user.name;
-            document.getElementById('profileEmail').textContent = user.email;
-            document.getElementById('profilePhoto').src = user.photo;
-        })
-        .catch(() => {
-            alert("Session expired! Login again.");
-            window.location.href = "/login";
-        });
-      document.addEventListener("DOMContentLoaded", loadProfile);
+const API = "/api/profile";
+let userData = {};
 
-      async function loadProfile() {
-        try {
-          const res = await fetch(API, { credentials: "include" });
-          if (!res.ok) throw new Error("Unauthorized");
-          userData = await res.json();
-          renderProfile(userData);
-          animateCounters();
-        } catch (err) {
-          document.getElementById("profileContainer").innerHTML = `
-            <div class="glass-card">
-              <i class="fas fa-sign-in-alt"></i> Please <a href="/login">log in</a> to view your profile.
-            </div>`;
+// Only ONE fetch — inside loadProfile
+document.addEventListener("DOMContentLoaded", loadProfile);
+
+async function loadProfile() {
+  try {
+    const res = await fetch(API, { credentials: "include" });
+
+    // Handle email not verified
+    if (res.status === 403) {
+      const data = await res.json();
+      if (data.error === "Email not verified") {
+        alert("Please verify your email to access profile!");
+        window.location.href = "/verify-otp";
+        return;
+      }
+    }
+
+    if (!res.ok) throw new Error("Unauthorized");
+
+    const user = await res.json();
+    userData = user;
+    renderProfile(user);
+    animateCounters();
+  } catch (err) {
+    console.error("Profile load failed:", err);
+    document.getElementById("profileContainer").innerHTML = `
+      <div class="glass-card" style="text-align:center; padding: 30px;">
+        <i class="fas fa-exclamation-triangle" style="font-size: 48px; color: #dc2626;"></i>
+        <p style="margin: 16px 0; font-size: 18px;">Session expired or not logged in.</p>
+        <a href="/login" style="color: #059669; font-weight: 600;">← Back to Login</a>
+      </div>`;
+    setTimeout(() => window.location.href = "/login", 3000);
+  }
+}
+
+function renderProfile(u) {
+  const container = document.getElementById("profileContainer");
+  container.innerHTML = `
+    <!-- Profile Header -->
+    <div class="profile-header">
+      <div class="profile-banner"></div>
+      <div class="profile-info">
+        <div class="profile-picture-wrapper">
+          <img src="${
+            u.photo ||
+            `https://ui-avatars.com/api/?name=${encodeURIComponent(
+              u.name
+            )}&background=43a047&color=fff`
+          }" 
+               alt="Profile" class="profile-picture" id="profilePic">
+          <div class="camera-icon" onclick="document.getElementById('photoUpload').click()">
+            <i class="fas fa-camera"></i>
+          </div>
+          <input type="file" id="photoUpload" accept="image/*" style="display:none" onchange="uploadAvatar(this.files[0])">
+        </div>
+        <div class="profile-details">
+          <h1 class="profile-name"><i class="fas fa-user-circle"></i> <span id="displayName">${u.name}</span></h1>
+          <p class="profile-tagline"><i class="fas fa-leaf"></i> Plant Lover</p>
+          <button class="edit-profile-btn" onclick="openEditModal()">
+            <i class="fas fa-edit"></i> Edit Profile
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Badge -->
+    <div class="glass-card">
+      <div class="badge-container">
+        <div class="badge-icon"><i class="fas fa-trophy"></i></div>
+        <div class="badge-info">
+          <div class="badge-level">Green Thumb - Level ${u.level || 1}</div>
+          <div class="badge-progress">Profile: ${u.profileCompletion || 0}%</div>
+          <div class="progress-bar-container"><div class="progress-bar" style="width:${u.profileCompletion || 0}%"></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Stats -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-icon"><i class="fas fa-seedling"></i></div>
+        <div class="stat-value" data-target="${u.totalPlants || 0}">0</div>
+        <div class="stat-label">Plants</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon"><i class="fas fa-check-circle"></i></div>
+        <div class="stat-value" data-target="${u.tasksCompleted || 0}">0</div>
+        <div class="stat-label">Tasks Done</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon"><i class="fas fa-sun"></i></div>
+        <div class="stat-value" data-target="${u.avgSunlight || 0}">0</div>
+        <div class="stat-label">Sunlight (hrs)</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon"><i class="fas fa-heart"></i></div>
+        <div class="stat-value" data-target="${u.healthScore || 0}">0</div>
+        <div class="stat-label">Health Score</div>
+      </div>
+    </div>
+
+    <!-- Two Columns -->
+    <div class="content-grid">
+      <div class="glass-card">
+        <h2 class="section-header"><i class="fas fa-info-circle"></i> User Details</h2>
+        <div class="detail-item">
+          <span class="detail-label"><i class="fas fa-user"></i> Name</span>
+          <span class="detail-value"><span id="displayNameDetail">${u.name}</span> <span class="edit-icon" onclick="openEditModal()"><i class="fas fa-edit"></i></span></span>
+        </div>
+        <div class="detail-item">
+          <span class="detail-label"><i class="fas fa-envelope"></i> Email</span>
+          <span class="detail-value"><span id="displayEmail">${u.email}</span> <span class="edit-icon" onclick="openEditModal()"><i class="fas fa-edit"></i></span></span>
+        </div>
+        <div class="detail-item">
+          <span class="detail-label"><i class="fas fa-map-marker-alt"></i> Location</span>
+          <span class="detail-value"><span id="displayLocation">${u.location || "Not set"}</span> <span class="edit-icon" onclick="openEditModal()"><i class="fas fa-edit"></i></span></span>
+        </div>
+        <div class="detail-item">
+          <span class="detail-label"><i class="fas fa-calendar-plus"></i> Joined</span>
+          <span class="detail-value">${new Date(u.createdAt).toLocaleDateString()}</span>
+        </div>
+        <div class="detail-item">
+          <span class="detail-label"><i class="fas fa-heart"></i> Favorites</span>
+          <span class="detail-value"><span class="edit-icon" onclick="openEditModal()"><i class="fas fa-edit"></i></span></span>
+        </div>
+        <div class="tags-container" id="favoritePlantsDisplay">
+          ${
+            u.favoritePlants
+              ?.map((p) => `<span class="tag"><i class="fas fa-leaf"></i> ${p}</span>`)
+              .join("") || "<em>No favorites yet</em>"
+          }
+        </div>
+      </div>
+
+      <div class="glass-card">
+        <h2 class="section-header"><i class="fas fa-cog"></i> Preferences</h2>
+        <div class="preference-item">
+          <span class="preference-label"><i class="fas fa-moon"></i> Dark Mode</span>
+          <div class="toggle-switch ${u.darkMode ? "active" : ""}" onclick="togglePref('darkMode', this)"></div>
+        </div>
+        <div class="preference-item">
+          <span class="preference-label"><i class="fas fa-bell"></i> Notifications</span>
+          <div class="toggle-switch ${u.notifications ? "active" : ""}" onclick="togglePref('notifications', this)"></div>
+        </div>
+        <div class="preference-item">
+          <span class="preference-label"><i class="fas fa-chart-line"></i> Weekly Summary</span>
+          <div class="toggle-switch ${u.weeklySummary ? "active" : ""}" onclick="togglePref('weeklySummary', this)"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Recent Activity -->
+    <div class="glass-card">
+      <h2 class="section-header"><i class="fas fa-history"></i> Recent Activity</h2>
+      <div class="activity-timeline" id="activityList">
+        ${
+          u.recentActivity?.length
+            ? u.recentActivity
+                .map(
+                  (a) => `
+            <div class="activity-item">
+              <div class="activity-text"><i class="fas fa-check"></i> ${a.text}</div>
+              <div class="activity-time"><i class="fas fa-clock"></i> ${timeAgo(a.time)}</div>
+            </div>
+          `
+                )
+                .join("")
+            : "<em>No recent activity</em>"
         }
-      }
+      </div>
+    </div>
+  `;
+}
 
-      function renderProfile(u) {
-        const container = document.getElementById("profileContainer");
-        container.innerHTML = `
-          <!-- Profile Header -->
-          <div class="profile-header">
-            <div class="profile-banner"></div>
-            <div class="profile-info">
-              <div class="profile-picture-wrapper">
-                <img src="${
-                  u.photo ||
-                  `https://ui-avatars.com/api/?name=${encodeURIComponent(
-                    u.name
-                  )}&background=43a047&color=fff`
-                }" 
-                     alt="Profile" class="profile-picture" id="profilePic">
-                <div class="camera-icon" onclick="document.getElementById('photoUpload').click()">
-                  <i class="fas fa-camera"></i>
-                </div>
-                <input type="file" id="photoUpload" accept="image/*" style="display:none" onchange="uploadAvatar(this.files[0])">
-              </div>
-              <div class="profile-details">
-                <h1 class="profile-name"><i class="fas fa-user-circle"></i> <span id="displayName">${
-                  u.name
-                }</span></h1>
-                <p class="profile-tagline"><i class="fas fa-leaf"></i> Plant Lover</p>
-                <button class="edit-profile-btn" onclick="openEditModal()">
-                  <i class="fas fa-edit"></i> Edit Profile
-                </button>
-              </div>
-            </div>
-          </div>
-
-          <!-- Badge -->
-          <div class="glass-card">
-            <div class="badge-container">
-              <div class="badge-icon"><i class="fas fa-trophy"></i></div>
-              <div class="badge-info">
-                <div class="badge-level">Green Thumb - Level ${
-                  u.level || 1
-                }</div>
-                <div class="badge-progress">Profile: ${
-                  u.profileCompletion || 0
-                }%</div>
-                <div class="progress-bar-container"><div class="progress-bar" style="width:${
-                  u.profileCompletion || 0
-                }%"></div></div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Stats -->
-          <div class="stats-grid">
-            <div class="stat-card">
-              <div class="stat-icon"><i class="fas fa-seedling"></i></div>
-              <div class="stat-value" data-target="${
-                u.totalPlants || 0
-              }">0</div>
-              <div class="stat-label">Plants</div>
-            </div>
-            <div class="stat-card">
-              <div class="stat-icon"><i class="fas fa-check-circle"></i></div>
-              <div class="stat-value" data-target="${
-                u.tasksCompleted || 0
-              }">0</div>
-              <div class="stat-label">Tasks Done</div>
-            </div>
-            <div class="stat-card">
-              <div class="stat-icon"><i class="fas fa-sun"></i></div>
-              <div class="stat-value" data-target="${
-                u.avgSunlight || 0
-              }">0</div>
-              <div class="stat-label">Sunlight (hrs)</div>
-            </div>
-            <div class="stat-card">
-              <div class="stat-icon"><i class="fas fa-heart"></i></div>
-              <div class="stat-value" data-target="${
-                u.healthScore || 0
-              }">0</div>
-              <div class="stat-label">Health Score</div>
-            </div>
-          </div>
-
-          <!-- Two Columns -->
-          <div class="content-grid">
-            <div class="glass-card">
-              <h2 class="section-header"><i class="fas fa-info-circle"></i> User Details</h2>
-              <div class="detail-item">
-                <span class="detail-label"><i class="fas fa-user"></i> Name</span>
-                <span class="detail-value"><span id="displayNameDetail">${
-                  u.name
-                }</span> <span class="edit-icon" onclick="openEditModal()"><i class="fas fa-edit"></i></span></span>
-              </div>
-              <div class="detail-item">
-                <span class="detail-label"><i class="fas fa-envelope"></i> Email</span>
-                <span class="detail-value"><span id="displayEmail">${
-                  u.email
-                }</span> <span class="edit-icon" onclick="openEditModal()"><i class="fas fa-edit"></i></span></span>
-              </div>
-              <div class="detail-item">
-                <span class="detail-label"><i class="fas fa-map-marker-alt"></i> Location</span>
-                <span class="detail-value"><span id="displayLocation">${
-                  u.location || "Not set"
-                }</span> <span class="edit-icon" onclick="openEditModal()"><i class="fas fa-edit"></i></span></span>
-              </div>
-              <div class="detail-item">
-                <span class="detail-label"><i class="fas fa-calendar-plus"></i> Joined</span>
-                <span class="detail-value">${new Date(
-                  u.createdAt
-                ).toLocaleDateString()}</span>
-              </div>
-              <div class="detail-item">
-                <span class="detail-label"><i class="fas fa-heart"></i> Favorites</span>
-                <span class="detail-value"><span class="edit-icon" onclick="openEditModal()"><i class="fas fa-edit"></i></span></span>
-              </div>
-              <div class="tags-container" id="favoritePlantsDisplay">
-                ${
-                  u.favoritePlants
-                    ?.map(
-                      (p) =>
-                        `<span class="tag"><i class="fas fa-leaf"></i> ${p}</span>`
-                    )
-                    .join("") || "<em>No favorites yet</em>"
-                }
-              </div>
-            </div>
-
-            <div class="glass-card">
-              <h2 class="section-header"><i class="fas fa-cog"></i> Preferences</h2>
-              <div class="preference-item">
-                <span class="preference-label"><i class="fas fa-moon"></i> Dark Mode</span>
-                <div class="toggle-switch ${
-                  u.darkMode ? "active" : ""
-                }" onclick="togglePref('darkMode', this)"></div>
-              </div>
-              <div class="preference-item">
-                <span class="preference-label"><i class="fas fa-bell"></i> Notifications</span>
-                <div class="toggle-switch ${
-                  u.notifications ? "active" : ""
-                }" onclick="togglePref('notifications', this)"></div>
-              </div>
-              <div class="preference-item">
-                <span class="preference-label"><i class="fas fa-chart-line"></i> Weekly Summary</span>
-                <div class="toggle-switch ${
-                  u.weeklySummary ? "active" : ""
-                }" onclick="togglePref('weeklySummary', this)"></div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Recent Activity -->
-          <div class="glass-card">
-            <h2 class="section-header"><i class="fas fa-history"></i> Recent Activity</h2>
-            <div class="activity-timeline" id="activityList">
-              ${
-                u.recentActivity?.length
-                  ? u.recentActivity
-                      .map(
-                        (a) => `
-                  <div class="activity-item">
-                    <div class="activity-text"><i class="fas fa-check"></i> ${
-                      a.text
-                    }</div>
-                    <div class="activity-time"><i class="fas fa-clock"></i> ${timeAgo(
-                      a.time
-                    )}</div>
-                  </div>
-                `
-                      )
-                      .join("")
-                  : "<em>No recent activity</em>"
-              }
-            </div>
-          </div>
-        `;
-      }
-/* ────── LISTEN FOR PLANT ADDED (profile.html) ────── */
+// ────── LISTEN FOR PLANT ADDED (profile.html) ──────
 window.addEventListener('plantAdded', e => {
   const newTotal = e.detail.total;
-  const plantStat = document.querySelector('.stat-value[data-target]'); // first stat = Plants
+  const plantStat = document.querySelector('.stat-value[data-target]');
   if (plantStat && plantStat.parentElement.querySelector('.stat-label').textContent === 'Plants') {
     plantStat.dataset.target = newTotal;
     plantStat.textContent = '0';
-    animateCounters();               // re-run all counters (fast)
+    animateCounters();
   }
 });
 
-/* ────── Keep your existing animateCounters() ────── */
 function animateCounters() {
   document.querySelectorAll(".stat-value").forEach((el) => {
     const target = +el.dataset.target;
@@ -231,133 +202,109 @@ function animateCounters() {
     }, 20);
   });
 }
-      function timeAgo(date) {
-        const seconds = Math.floor((new Date() - new Date(date)) / 1000);
-        if (seconds < 60) return "Just now";
-        const minutes = Math.floor(seconds / 60);
-        if (minutes < 60) return `${minutes} min ago`;
-        const hours = Math.floor(minutes / 60);
-        if (hours < 24) return `${hours} hr ago`;
-        return `${Math.floor(hours / 24)} days ago`;
-      }
 
-      function animateCounters() {
-        document.querySelectorAll(".stat-value").forEach((el) => {
-          const target = +el.dataset.target;
-          let current = 0;
-          const step = target / 100;
-          const timer = setInterval(() => {
-            current += step;
-            if (current >= target) {
-              el.textContent = target;
-              clearInterval(timer);
-            } else {
-              el.textContent = Math.floor(current);
-            }
-          }, 20);
-        });
-      }
-      
+function timeAgo(date) {
+  const seconds = Math.floor((new Date() - new Date(date)) / 1000);
+  if (seconds < 60) return "Just now";
+  const minutes = Math.floor(seconds / 60);
+  if (minutes < 60) return `${minutes} min ago`;
+  const hours = Math.floor(minutes / 60);
+  if (hours < 24) return `${hours} hr ago`;
+  return `${Math.floor(hours / 24)} days ago`;
+}
 
-      function openEditModal() {
-        document.getElementById("nameInput").value = userData.name;
-        document.getElementById("emailInput").value = userData.email;
-        document.getElementById("locationInput").value =
-          userData.location || "";
-        document.getElementById("previewImg").src =
-          userData.photo ||
-          `https://ui-avatars.com/api/?name=${encodeURIComponent(
-            userData.name
-          )}&background=43a047&color=fff`;
-        document.getElementById("editModal").classList.add("active");
-      }
+function openEditModal() {
+  document.getElementById("nameInput").value = userData.name;
+  document.getElementById("emailInput").value = userData.email;
+  document.getElementById("locationInput").value = userData.location || "";
+  document.getElementById("previewImg").src =
+    userData.photo ||
+    `https://ui-avatars.com/api/?name=${encodeURIComponent(userData.name)}&background=43a047&color=fff`;
+  document.getElementById("editModal").classList.add("active");
+}
 
-      function closeEditModal() {
-        document.getElementById("editModal").classList.remove("active");
-      }
+function closeEditModal() {
+  document.getElementById("editModal").classList.remove("active");
+}
 
-      document.getElementById("editForm").onsubmit = async function (e) {
-        e.preventDefault();
-        const formData = new FormData();
-        formData.append("name", document.getElementById("nameInput").value);
-        formData.append("email", document.getElementById("emailInput").value);
-        if (document.getElementById("locationInput").value)
-          formData.append(
-            "location",
-            document.getElementById("locationInput").value
-          );
-        if (document.getElementById("photoInput").files[0])
-          formData.append(
-            "avatar",
-            document.getElementById("photoInput").files[0]
-          );
+document.getElementById("editForm").onsubmit = async function (e) {
+  e.preventDefault();
+  const formData = new FormData();
+  formData.append("name", document.getElementById("nameInput").value);
+  formData.append("email", document.getElementById("emailInput").value);
+  if (document.getElementById("locationInput").value)
+    formData.append("location", document.getElementById("locationInput").value);
+  if (document.getElementById("photoInput").files[0])
+    formData.append("avatar", document.getElementById("photoInput").files[0]);
 
-        try {
-          const res = await fetch(API, {
-            method: "POST",
-            body: formData,
-            credentials: "include",
-          });
-          const data = await res.json();
-          if (data.success) {
-            userData = data.user;
-            renderProfile(userData);
-            closeEditModal();
-            showAlert("Profile updated successfully!");
-          } else {
-            showAlert(data.error || "Update failed");
-          }
-        } catch (err) {
-          showAlert("Network error");
-        }
-      };
+  try {
+    const res = await fetch(API, {
+      method: "POST",
+      body: formData,
+      credentials: "include",
+    });
+    const data = await res.json();
+    if (data.success) {
+      userData = data.user;
+      renderProfile(userData);
+      closeEditModal();
+      showAlert("Profile updated successfully!");
+    } else {
+      showAlert(data.error || "Update failed");
+    }
+  } catch (err) {
+    showAlert("Network error");
+  }
+};
 
-      async function uploadAvatar(file) {
-        const formData = new FormData();
-        formData.append("avatar", file);
-        try {
-          const res = await fetch(API, {
-            method: "POST",
-            body: formData,
-            credentials: "include",
-          });
-          const data = await res.json();
-          if (data.success) {
-            userData = data.user;
-            document.getElementById("profilePic").src = userData.photo;
-            showAlert("Avatar updated!");
-          }
-        } catch (err) {
-          showAlert("Upload failed");
-        }
-      }
+async function uploadAvatar(file) {
+  const formData = new FormData();
+  formData.append("avatar", file);
+  try {
+    const res = await fetch(API, {
+      method: "POST",
+      body: formData,
+      credentials: "include",
+    });
+    const data = await res.json();
+    if (data.success) {
+      userData = data.user;
+      document.getElementById("profilePic").src = userData.photo;
+      showAlert("Avatar updated!");
+    }
+  } catch (err) {
+    showAlert("Upload failed");
+  }
+}
 
-      function togglePref(key, el) {
-        el.classList.toggle("active");
-        fetch(API, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ [key]: el.classList.contains("active") }),
-          credentials: "include",
-        });
-      }
+function togglePref(key, el) {
+  el.classList.toggle("active");
+  fetch(API, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ [key]: el.classList.contains("active") }),
+    credentials: "include",
+  });
+}
 
-      function showAlert(msg) {
-        const alert = document.getElementById("alert");
-        alert.querySelector("span").textContent = msg;
-        alert.classList.add("show");
-        setTimeout(() => alert.classList.remove("show"), 3000);
-      }
+function showAlert(msg) {
+  const alert = document.getElementById("alert");
+  alert.querySelector("span").textContent = msg;
+  alert.classList.add("show");
+  setTimeout(() => alert.classList.remove("show"), 3000);
+}
 
-      document.getElementById("editModal").onclick = (e) => {
-        if (e.target === e.currentTarget) closeEditModal();
-      };
-      function broadcast(eventName, data) {
+document.getElementById("editModal").onclick = (e) => {
+  if (e.target === e.currentTarget) closeEditModal();
+};
+
+// ────── BROADCAST SYSTEM ──────
+function broadcast(eventName, data) {
   const payload = JSON.stringify({ event: eventName, data, ts: Date.now() });
   localStorage.setItem('plantcare_event', payload);
-  // trigger the same event in the current tab
   window.dispatchEvent(new Event('storage'));
 }
+
 window.addEventListener('storage', e => {
   if (e.key !== 'plantcare_event') return;
   try {
