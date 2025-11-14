@@ -6,25 +6,64 @@
     <title>PlantCare AI - Examine</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
 <link rel="stylesheet" href="./assets/css/examine.css">
-  
+ <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+   <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
 </head>
 <body>
     <!-- Header -->
-    <div class="header-wrapper">
-        <div class="container">
-            <div class="header">
-                <div class="logo">
-                    <svg class="logo-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M12 2L2 7L12 12L22 7L12 2Z" fill="#059669"/>
-                        <path d="M2 17L12 22L22 17" stroke="#059669" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                        <path d="M2 12L12 17L22 12" stroke="#047857" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                    </svg>
-                    PlantCare AI
-                </div>
-                <button class="nav-btn" onclick="window.location.href='dashboard.html'">Dashboard</button>
-            </div>
+ <!-- Navbar -->
+    <nav class="navbar">
+      <div class="logo"><i class="fas fa-leaf"></i>PlantCare</div>
+      <div class="nav-links">
+        <a href="/Dashboard" class="nav-link"
+          ><i class="fas fa-th-large"></i>Dashboard</a
+        >
+        <a href="/Examine" class="nav-link active"
+          ><i class="fas fa-upload"></i>Upload</a
+        >
+        <a href="/Calendar" class="nav-link"
+          ><i class="fas fa-calendar-alt"></i>Calendar</a
+        >
+        <a href="/contact" class="nav-link"
+          ><i class="fas fa-envelope"></i>Contact Us</a
+        >
+      </div>
+      <div class="nav-right">
+        <input
+          type="text"
+          class="search-bar"
+          placeholder="Search plants, tasks..."
+        />
+        <button class="theme-toggle" onclick="toggleTheme()">
+          <i class="fas fa-moon"></i>
+        </button>
+        <button class="notification-btn"><i class="fas fa-bell"></i></button>
+
+        <div class="profile-dropdown">
+          <img
+            id="profilePic"
+            src=""
+            alt="Profile"
+            class="profile-pic"
+            onclick="toggleDropdown()"
+          />
+          <div class="dropdown-menu" id="dropdownMenu">
+            <a href="/profile" class="dropdown-item"
+              ><i class="fas fa-user"></i> Profile</a
+            >
+            <a href="/logout" class="dropdown-item"
+              ><i class="fas fa-sign-out-alt"></i> Logout</a
+            >
+          </div>
         </div>
-    </div>
+      </div>
+    </nav>
 
     <!-- Main Content -->
     <div class="container">

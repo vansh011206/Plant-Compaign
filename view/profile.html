@@ -16,35 +16,58 @@
       href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
       rel="stylesheet"
     />
+     <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
 
  
   </head>
   <body>
-    <!-- Navbar -->
-    <nav>
-      <div class="nav-container">
-        <div class="logo"><i class="fas fa-seedling"></i> PlantCare</div>
-        <ul class="nav-links">
-          <li>
-            <a href="/dashboard"
-              ><i class="fas fa-tachometer-alt"></i> Dashboard</a
-            >
-          </li>
-          <li>
-            <a href="/examine"><i class="fas fa-camera"></i> Upload</a>
-          </li>
-          <li>
-            <a href="/calendar"><i class="fas fa-calendar-alt"></i> Calendar</a>
-          </li>
-          <li>
-            <a href="/profile" class="active"
+   <nav class="navbar">
+      <div class="logo"><i class="fas fa-leaf"></i>PlantCare</div>
+      <div class="nav-links">
+        <a href="/Dashboard" class="nav-link"
+          ><i class="fas fa-th-large"></i>Dashboard</a
+        >
+        <a href="/Examine" class="nav-link"
+          ><i class="fas fa-upload"></i>Upload</a
+        >
+        <a href="/Calendar" class="nav-link"
+          ><i class="fas fa-calendar-alt"></i>Calendar</a
+        >
+        <a href="/contact" class="nav-link"
+          ><i class="fas fa-envelope"></i>Contact Us</a
+        >
+      </div>
+      <div class="nav-right">
+        <input
+          type="text"
+          class="search-bar"
+          placeholder="Search plants, tasks..."
+        />
+        <button class="theme-toggle" onclick="toggleTheme()">
+          <i class="fas fa-moon"></i>
+        </button>
+        <button class="notification-btn"><i class="fas fa-bell"></i></button>
+
+        <div class="profile-dropdown">
+          <img
+            id="profilePic"
+            src=""
+            alt="Profile"
+            class="profile-pic"
+            onclick="toggleDropdown()"
+          />
+          <div class="dropdown-menu" id="dropdownMenu">
+            <a href="/profile" class="dropdown-item"
               ><i class="fas fa-user"></i> Profile</a
             >
-          </li>
-          <li>
-            <a href="/contact"><i class="fas fa-envelope"></i> Contact</a>
-          </li>
-        </ul>
+            <a href="/logout" class="dropdown-item"
+              ><i class="fas fa-sign-out-alt"></i> Logout</a
+            >
+          </div>
+        </div>
       </div>
     </nav>
 
