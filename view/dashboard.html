@@ -1,188 +1,109 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>PlantCare Dashboard</title>
-<link rel="stylesheet" href="./assets/css/dashboard.css">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>PlantCare Dashboard</title>
 
-    <!-- Google Fonts – already allowed by your CSP -->
-    <link
-      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
-      rel="stylesheet"
-    />
+  <link rel="stylesheet" href="./assets/css/dashboard.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
 
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
-    />
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="logo"><i class="fas fa-leaf"></i>PlantCare</div>
+    <div class="nav-links">
+      <a href="/Dashboard" class="nav-link active"><i class="fas fa-th-large"></i>Dashboard</a>
+      <a href="/Examine" class="nav-link"><i class="fas fa-upload"></i>Upload</a>
+      <a href="/Calendar" class="nav-link"><i class="fas fa-calendar-alt"></i>Calendar</a>
+      <a href="/contact" class="nav-link"><i class="fas fa-envelope"></i>Contact Us</a>
+    </div>
+    <div class="nav-right">
+      <input type="text" class="search-bar" placeholder="Search plants, tasks..."/>
+      <button class="theme-toggle" onclick="toggleTheme()">
+        <i class="fas fa-moon"></i>
+      </button>
+      <button class="notification-btn"><i class="fas fa-bell"></i></button>
 
-
-  </head>
-  <body>
-    <!-- Navbar -->
-    <nav class="navbar">
-      <div class="logo"><i class="fas fa-leaf"></i>PlantCare</div>
-      <div class="nav-links">
-        <a href="/Dashboard" class="nav-link active"
-          ><i class="fas fa-th-large"></i>Dashboard</a
-        >
-        <a href="/Examine" class="nav-link"
-          ><i class="fas fa-upload"></i>Upload</a
-        >
-        <a href="/Calendar" class="nav-link"
-          ><i class="fas fa-calendar-alt"></i>Calendar</a
-        >
-        <a href="/contact" class="nav-link"
-          ><i class="fas fa-envelope"></i>Contact Us</a
-        >
-      </div>
-      <div class="nav-right">
-        <input
-          type="text"
-          class="search-bar"
-          placeholder="Search plants, tasks..."
-        />
-        <button class="theme-toggle" onclick="toggleTheme()">
-          <i class="fas fa-moon"></i>
-        </button>
-        <button class="notification-btn"><i class="fas fa-bell"></i></button>
-
-        <div class="profile-dropdown">
-          <img
-            id="profilePic"
-            src=""
-            alt="Profile"
-            class="profile-pic"
-            onclick="toggleDropdown()"
-          />
-          <div class="dropdown-menu" id="dropdownMenu">
-            <a href="/profile" class="dropdown-item"
-              ><i class="fas fa-user"></i> Profile</a
-            >
-            <a href="/logout" class="dropdown-item"
-              ><i class="fas fa-sign-out-alt"></i> Logout</a
-            >
-          </div>
-        </div>
-      </div>
-    </nav>
-
-    <!-- Main Content (unchanged) -->
-    <div class="container">
-      <div class="summary-grid">
-        <div class="summary-card">
-          <div class="card-icon green"><i class="fas fa-seedling"></i></div>
-          <div class="card-title">Total Plants</div>
-          <div class="card-value" data-target="24">0</div>
-        </div>
-        <div class="summary-card">
-          <div class="card-icon blue"><i class="fas fa-tint"></i></div>
-          <div class="card-title">Watering Tasks</div>
-          <div class="card-value" data-target="8">0</div>
-        </div>
-        <div class="summary-card">
-          <div class="card-icon orange"><i class="fas fa-sun"></i></div>
-          <div class="card-title">Sunlight Hours</div>
-          <div class="card-value" data-target="6.5">0</div>
-        </div>
-        <div class="summary-card">
-          <div class="card-icon red"><i class="fas fa-heart"></i></div>
-          <div class="card-title">Health Index</div>
-          <div class="card-value" data-target="92">0</div>
-        </div>
-      </div>
-
-      <div class="analytics-section">
-        <div class="chart-container">
-          <div class="chart-title">
-            <i class="fas fa-chart-line"></i>Growth Progress
-          </div>
-          <canvas id="growthChart"></canvas>
-        </div>
-        <div class="chart-container">
-          <div class="chart-title">
-            <i class="fas fa-chart-pie"></i>Plant Categories
-          </div>
-          <canvas id="categoryChart"></canvas>
-        </div>
-      </div>
-
-      <div class="task-tracker">
-        <div class="task-header">
-          <div class="task-title">
-            <i class="fas fa-tasks"></i>Care Schedule
-          </div>
-          <button class="add-task-btn">
-            <i class="fas fa-plus"></i>Add Task
-          </button>
-        </div>
-        <div class="task-list">
-          <div class="task-item">
-            <input type="checkbox" class="task-checkbox" />
-            <div class="task-content">
-              <div class="task-name">Water Monstera Deliciosa</div>
-              <div class="task-time">
-                <i class="far fa-clock"></i>Today, 9:00 AM
-              </div>
-            </div>
-            <span class="task-status status-pending">Pending</span>
-            <div class="task-actions">
-              <button class="action-btn edit">
-                <i class="fas fa-edit"></i></button
-              ><button class="action-btn delete">
-                <i class="fas fa-trash"></i>
-              </button>
-            </div>
-          </div>
-          <div class="task-item">
-            <input type="checkbox" class="task-checkbox" checked />
-            <div class="task-content">
-              <div class="task-name">Fertilize Snake Plant</div>
-              <div class="task-time">
-                <i class="far fa-clock"></i>Today, 11:30 AM
-              </div>
-            </div>
-            <span class="task-status status-completed">Completed</span>
-            <div class="task-actions">
-              <button class="action-btn edit">
-                <i class="fas fa-edit"></i></button
-              ><button class="action-btn delete">
-                <i class="fas fa-trash"></i>
-              </button>
-            </div>
-          </div>
-          <div class="task-item">
-            <input type="checkbox" class="task-checkbox" />
-            <div class="task-content">
-              <div class="task-name">Check Humidity for Ferns</div>
-              <div class="task-time">
-                <i class="far fa-clock"></i>Tomorrow, 8:00 AM
-              </div>
-            </div>
-            <span class="task-status status-pending">Pending</span>
-            <div class="task-actions">
-              <button class="action-btn edit">
-                <i class="fas fa-edit"></i></button
-              ><button class="action-btn delete">
-                <i class="fas fa-trash"></i>
-              </button>
-            </div>
-          </div>
+      <div class="profile-dropdown">
+        <img id="profilePic" src="" alt="Profile" class="profile-pic" onclick="toggleDropdown()"/>
+        <div class="dropdown-menu" id="dropdownMenu">
+          <a href="/profile" class="dropdown-item"><i class="fas fa-user"></i> Profile</a>
+          <a href="/logout" class="dropdown-item"><i class="fas fa-sign-out-alt"></i> Logout</a>
         </div>
       </div>
     </div>
+  </nav>
 
-    <footer>
-      <p>© 2025 PlantCare Dashboard. All rights reserved.</p>
-      <div class="footer-links">
-        <a href="#">Privacy Policy</a><a href="#">Terms of Service</a
-        ><a href="#">Contact Us</a>
+  <!-- Main Content -->
+  <div class="container">
+    <div class="summary-grid">
+      <div class="summary-card">
+        <div class="card-icon green"><i class="fas fa-seedling"></i></div>
+        <div class="card-title">Total Plants</div>
+        <div class="card-value total-plants" data-target="0">0</div>
       </div>
-    </footer>
+      <div class="summary-card">
+        <div class="card-icon blue"><i class="fas fa-tint"></i></div>
+        <div class="card-title">Watering Tasks</div>
+        <div class="card-value watering-tasks" data-target="0">0</div>
+      </div>
+      <div class="summary-card">
+        <div class="card-icon orange"><i class="fas fa-sun"></i></div>
+        <div class="card-title">Sunlight Hours</div>
+        <div class="card-value sunlight-hours" data-target="0">0</div>
+      </div>
+      <div class="summary-card">
+        <div class="card-icon red"><i class="fas fa-heart"></i></div>
+        <div class="card-title">Health Index</div>
+        <div class="card-value health-index" data-target="0">0</div>
+      </div>
+    </div>
 
-<script src="./assets/js/dashboard.js"></script>
+    <div class="analytics-section">
+      <div class="chart-container">
+        <div class="chart-title"><i class="fas fa-chart-line"></i>Growth Progress</div>
+        <canvas id="growthChart"></canvas>
+      </div>
+      <div class="chart-container">
+        <div class="chart-title"><i class="fas fa-chart-pie"></i>Plant Categories</div>
+        <canvas id="categoryChart"></canvas>
+      </div>
+    </div>
 
-  </body>
+    <div class="task-tracker">
+      <div class="task-header">
+        <div class="task-title"><i class="fas fa-tasks"></i>Care Schedule</div>
+        <button class="add-task-btn"><i class="fas fa-plus"></i>Add Task</button>
+      </div>
+      <div class="task-list">
+        <div class="task-item">
+          <input type="checkbox" class="task-checkbox"/>
+          <div class="task-content">
+            <div class="task-name">Water Monstera Deliciosa</div>
+            <div class="task-time"><i class="far fa-clock"></i>Today, 9:00 AM</div>
+          </div>
+          <span class="task-status status-pending">Pending</span>
+          <div class="task-actions">
+            <button class="action-btn edit"><i class="fas fa-edit"></i></button>
+            <button class="action-btn delete"><i class="fas fa-trash"></i></button>
+          </div>
+        </div>
+        <!-- More tasks... -->
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <p>© 2025 PlantCare Dashboard. All rights reserved.</p>
+    <div class="footer-links">
+      <a href="#">Privacy Policy</a><a href="#">Terms of Service</a><a href="#">Contact Us</a>
+    </div>
+  </footer>
+
+  <script src="./assets/js/dashboard.js"></script>
+</body>
 </html>
