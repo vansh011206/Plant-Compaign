@@ -42,10 +42,10 @@ async function loadDashboardStats() {
 
     // Realistic mock data with slight randomness
     const mock = {
-      totalPlants: 0,     // 22–29
-      wateringTasks: 0,    // 3–7
-      sunlightHours: 0,   // 6.0–8.0
-      healthIndex: 0      // 89–96
+      totalPlants: 3,     // 22–29
+      wateringTasks: 7,    // 3–7
+      sunlightHours: 13,   // 6.0–8.0
+      healthIndex: 90      // 89–96
     };
 
     updateCounter('total-plants', mock.totalPlants);
