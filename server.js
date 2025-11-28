@@ -47,7 +47,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 // ===================== DATABASE =====================
-mongoose.connect("mongodb://127.0.0.1:27017/plantcare")
+mongoose.connect(process.env.MONGO_URI)
     .then(() => console.log("MongoDB Connected"))
     .catch(() => console.log("Start MongoDB!"));
 
