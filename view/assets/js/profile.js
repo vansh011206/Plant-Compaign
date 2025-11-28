@@ -82,22 +82,22 @@ function renderProfile(u) {
     <div class="stats-grid">
       <div class="stat-card">
         <div class="stat-icon"><i class="fas fa-seedling"></i></div>
-        <div class="stat-value" data-target="${u.totalPlants || 0}">0</div>
+        <div class="stat-value" data-target="${3}">0</div>
         <div class="stat-label">Plants</div>
       </div>
       <div class="stat-card">
         <div class="stat-icon"><i class="fas fa-check-circle"></i></div>
-        <div class="stat-value" data-target="${u.tasksCompleted || 0}">0</div>
+        <div class="stat-value" data-target="${7}">0</div>
         <div class="stat-label">Tasks Done</div>
       </div>
       <div class="stat-card">
         <div class="stat-icon"><i class="fas fa-sun"></i></div>
-        <div class="stat-value" data-target="${u.avgSunlight || 0}">0</div>
+        <div class="stat-value" data-target="${13}">0</div>
         <div class="stat-label">Sunlight (hrs)</div>
       </div>
       <div class="stat-card">
         <div class="stat-icon"><i class="fas fa-heart"></i></div>
-        <div class="stat-value" data-target="${u.healthScore || 0}">0</div>
+        <div class="stat-value" data-target="${'loading..'}">0</div>
         <div class="stat-label">Health Score</div>
       </div>
     </div>
