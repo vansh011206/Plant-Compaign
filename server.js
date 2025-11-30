@@ -408,13 +408,13 @@ app.post("/api/profile", requireAuth, async (req, res) => {
     res.json({ success: true, user: updatedUser });
 });
 
-// ===================== PROTECTED PAGES =====================
+
 app.get(["/dashboard", "/examine", "/profile", "/calendar", "/contact"], requireAuth, requireVerified, (req, res) => {
     const file = req.path === "/dashboard" ? "dashboard.html" : req.path.slice(1) + ".html";
     res.sendFile(path.join(__dirname, "view", file));
 });
 
-// ===================== PLANT.ID AI WITH COMMON NAME FALLBACK =====================
+
 app.post("/api/identify-plant", async (req, res) => {
     try {
         let img = req.body.imageBase64;
@@ -474,8 +474,6 @@ app.post("/api/identify-plant", async (req, res) => {
         res.status(500).json({ error: "Server busy, try again!" });
     }
 });
-
-// ===================== ADD TO GARDEN WITH EMAILS =====================
 app.post("/api/add-to-garden", requireAuth, requireVerified, async (req, res) => {
     const { plant } = req.body;
     const user = await User.findById(req.user._id);
@@ -498,7 +496,6 @@ app.post("/api/add-to-garden", requireAuth, requireVerified, async (req, res) =>
     }
 });
 
-// ===================== LOGOUT (POST ONLY) =====================
 app.post("/api/logout", (req, res) => {
     req.logout(() => {
         req.session.destroy(() => {
@@ -507,14 +504,14 @@ app.post("/api/logout", (req, res) => {
     });
 });
 
-// ===================== CLEANUP ON SHUTDOWN =====================
+
 process.on('SIGINT', () => {
     console.log("Shutting down gracefully...");
     reminders.forEach(r => clearTimeout(r.timeout));
     process.exit(0);
 });
 
-// ===================== START =====================
+
 app.listen(PORT, () => {
     console.log(`LIVE → http://localhost:${PORT}`);
     console.log(`LOGIN = WORKING`);
