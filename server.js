@@ -516,3 +516,13 @@ app.listen(PORT, () => {
     console.log(`LIVE → http://localhost:${PORT}`);
     console.log(`LOGIN = WORKING`);
 });
+
+if (process.env.NODE_ENV !== 'production') {
+    app.listen(PORT, () => {
+        console.log(`LIVE → http://localhost:${PORT}`);
+        console.log(`LOGIN = WORKING`);
+    });
+}
+
+// Export for Vercel serverless
+module.exports = app;
