@@ -17,7 +17,7 @@ console.log("PLANT.ID KEY:", process.env.PLANT_ID_API_KEY ? "LOADED" : "MISSING"
 
 // ===================== APP =====================
 const app = express();
-const PORT = 5000;
+const PORT = process.env.PORT || 5000;
 
 // ===================== STATIC FILES =====================
 app.use(express.static(path.join(__dirname, "view")));
@@ -27,7 +27,11 @@ app.use("/uploads", express.static(path.join(__dirname, "view", "uploads")));
 app.use(express.json({ limit: "50mb" }));
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
-app.use(cors({ origin: `http://localhost:${PORT}`, credentials: true }));
+app.use(cors({
+    origin: process.env.BASE_URL,
+    credentials: true
+}));
+
 
 // ===================== SESSION =====================
 app.use(session({
@@ -198,7 +202,8 @@ body { margin: 0; padding: 0; background: #f4f7f6; font-family: 'Inter', sans-se
         <p class="message">Welcome to <strong>PlantCare AI</strong>! Please verify your email with the OTP below:</p>
         <div class="otp-box"><p class="otp">${otp}</p></div>
         <p class="message">This code expires in <strong>10 minutes</strong>. If you didn't request this, ignore this email.</p>
-        <a href="http://localhost:5000/verify-otp" class="btn">Verify Now</a>
+        <a href="${process.env.BASE_URL}/verify-otp" class="btn">Verify Now</a>
+
     </div>
     <div class="footer">
         <p>&copy; 2025 PlantCare AI. All rights reserved.</p>
@@ -511,8 +516,6 @@ process.on('SIGINT', () => {
     process.exit(0);
 });
 
-
 app.listen(PORT, () => {
-    console.log(`LIVE → http://localhost:${PORT}`);
-    console.log(`LOGIN = WORKING`);
+  console.log(`Server running on port ${PORT}`);
 });
