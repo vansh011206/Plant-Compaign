@@ -18,9 +18,7 @@ console.log("PLANT.ID KEY:", process.env.PLANT_ID_API_KEY ? "LOADED" : "MISSING"
 // ===================== APP =====================
 const app = express();
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
+
 // ===================== STATIC FILES =====================
 app.use(express.static(path.join(__dirname, "view")));
 app.use("/uploads", express.static(path.join(__dirname, "view", "uploads")));
@@ -518,3 +516,6 @@ process.on('SIGINT', () => {
     process.exit(0);
 });
 
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});
