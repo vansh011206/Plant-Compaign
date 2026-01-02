@@ -12,8 +12,9 @@ const nodemailer = require("nodemailer");
 const { createTransport } = nodemailer;
 const { convert } = require("html-to-text");
 const crypto = require("crypto");
+const MongoStore = require('connect-mongo');
 
-console.log("PLANT.ID KEY:", process.env.PLANT_ID_API_KEY ? "LOADED" : "MISSING");
+// console.log("PLANT.ID KEY:", process.env.PLANT_ID_API_KEY ? "LOADED" : "MISSING");
 
 // ===================== APP =====================
 const app = express();
@@ -27,18 +28,40 @@ app.use("/uploads", express.static(path.join(__dirname, "view", "uploads")));
 app.use(express.json({ limit: "50mb" }));
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
-app.use(cors({ origin: `http://localhost:${PORT}`, credentials: true }));
+const allowedOrigins = [
+    `http://localhost:${PORT}`,
+    'https://your-app-name.vercel.app',  // Replace with your Vercel URL
+    /\.vercel\.app$/
+];
+
+app.use(cors({
+    origin: function(origin, callback) {
+        if (!origin) return callback(null, true);
+        if (allowedOrigins.some(o => o instanceof RegExp ? o.test(origin) : o === origin)) {
+            return callback(null, true);
+        }
+        return callback(null, false);
+    },
+    credentials: true
+}));
+
+// Trust proxy for Vercel
+app.set('trust proxy', 1);
 
 // ===================== SESSION =====================
 app.use(session({
     secret: process.env.SESSION_SECRET || "plantcare-secret-2025",
     resave: false,
     saveUninitialized: false,
+    store: MongoStore.create({
+        mongoUrl: process.env.MONGO_URI,
+        ttl: 24 * 60 * 60 // 1 day
+    }),
     cookie: {
-        maxAge: 24 * 60 * 60 * 1000, // 24 hours
+        maxAge: 24 * 60 * 60 * 1000,
         httpOnly: true,
-        secure: process.env.NODE_ENV === 'production', // HTTPS only in prod
-        sameSite: 'lax'
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax'
     }
 }));
 
