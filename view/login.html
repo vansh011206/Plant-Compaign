@@ -68,7 +68,7 @@
 
         <!-- LOGIN -->
         <div class="form-content active" id="loginContent">
-          <form id="loginForm">
+          <form id="loginForm" action="/api/login" method="POST">
             <div class="input-group">
               <input
                 type="email"
@@ -128,7 +128,7 @@
 
         <!-- SIGNUP -->
         <div class="form-content" id="signupContent">
-          <form id="signupForm">
+          <form id="signupForm"action="/api/signup" method="POST">
             <div class="input-group">
               <input
                 type="text"
@@ -209,7 +209,7 @@
         </div>
 
         <!-- OTP VERIFICATION (hidden initially) -->
-        <div class="form-content" id="otpContent">
+        <div class="form-content" id="otpContent"action="/api/verify-otp" method="POST">
           <div style="text-align: center; margin-bottom: 24px">
             <h2
               style="
